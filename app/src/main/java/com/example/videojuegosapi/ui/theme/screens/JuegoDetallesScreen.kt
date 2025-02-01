@@ -26,10 +26,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import com.example.videojuegosapi.viewmodel.DetalleJuegosViewModel
 import com.example.videojuegosapi.viewmodel.JuegosViewModel
 
 @Composable
-fun JuegoDetallesScreen(navController: NavController, idJuego: String?, viewModel: JuegosViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun JuegoDetallesScreen(navController: NavController, idJuego: String?, viewModel: DetalleJuegosViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val detalleJuego by viewModel.detalleJuego.collectAsState()
 
     //Funcion encargada de cargar los detalles del juego seleccionado por el usuario

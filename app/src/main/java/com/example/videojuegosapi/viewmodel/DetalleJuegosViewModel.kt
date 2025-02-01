@@ -10,16 +10,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 //Clase de ViewModel para el manejo de datos de la aplicación
-class JuegosViewModel : ViewModel() {
-    private val _juegos = MutableStateFlow<List<Juego>>(emptyList())
-    val juegos: StateFlow<List<Juego>> = _juegos
+class DetalleJuegosViewModel : ViewModel() {
 
-    // Cargar la lista de juegos
-    fun cargarJuegos() {
+    private val _detalleJuego = MutableStateFlow<DetalleJuegos?>(null)
+    val detalleJuego: StateFlow<DetalleJuegos?> = _detalleJuego
+
+    // Cargar los detalles de un juego
+    fun cargarDetalleJuego(gameId: String) {
         viewModelScope.launch {
             try {
-                val juegosCargados = ApiClient.getGames()
-                _juegos.value = juegosCargados
+                val detalle = ApiClient.getGameDetails(gameId)
+                _detalleJuego.value = detalle
             } catch (e: Exception) {
                 e.printStackTrace()
             }

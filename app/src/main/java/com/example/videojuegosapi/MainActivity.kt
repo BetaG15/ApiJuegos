@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.example.videojuegosapi.data.AuthManager
 import com.example.videojuegosapi.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +12,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            Navigation(navController = navController)
+            val auth = AuthManager(applicationContext)
+            Navigation(navController = navController, auth = auth)
         }
     }
 }

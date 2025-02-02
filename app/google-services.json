@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "283711467163",
+    "project_id": "appvideojuegos-a6905",
+    "storage_bucket": "appvideojuegos-a6905.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283711467163:android:d908e112a24dcfab11203e",
+        "android_client_info": {
+          "package_name": "com.example.videojuegosapi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT_9Hd9SPIhYPivR65fg-sJznTCggnv1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

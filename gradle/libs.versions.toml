@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.0-alpha08"
 coilCompose = "2.4.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -36,6 +36,7 @@ firebase-analytics = {group = "com.google.firebase", name = "firebase-analytics"
 firebase-auth = {group = "com.google.firebase", name = "firebase-auth-ktx"}
 coil = { group = "io.coil-kt", name = "coil-compose", version = "2.4.0" }
 play-services = {group = "com.google.android.gms", name = "play-services-auth", version = "21.3.0"}
+play-services-auth = { module = "com.google.android.gms:play-services-auth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -26,6 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Configuración de Firebase -->
+        <meta-data
+            android:name="com.google.firebase.auth.api.gms.core.api_key"
+            android:value="@string/default_web_client_id" />
+        <!-- Configuración de Google Sign-In -->
+        <meta-data
+            android:name="com.google.android.gms.auth.api.credentials.CLIENT_ID"
+            android:value="@string/default_web_client_id" />
     </application>
 
 </manifest>

@@ -19,8 +19,13 @@ class JuegosViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val juegosCargados = ApiClient.getGames()
-                _juegos.value = juegosCargados
+                if (juegosCargados.isNotEmpty()) {
+                    _juegos.value = juegosCargados
+                } else {
+                    println("Error: Lista de juegos vacía")
+                }
             } catch (e: Exception) {
+                println("Error al cargar los juegos: ${e.message}")
                 e.printStackTrace()
             }
         }

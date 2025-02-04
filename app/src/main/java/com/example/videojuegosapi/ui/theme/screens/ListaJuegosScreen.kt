@@ -89,7 +89,7 @@ fun ListaJuegosScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Cyan),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.LightGray),
                 actions = {
                     IconButton(onClick = { showDialog = true }) {
                         Icon(Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = "Cerrar sesión")

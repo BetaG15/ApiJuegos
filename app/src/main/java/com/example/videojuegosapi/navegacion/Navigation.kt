@@ -5,10 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.videojuegosapi.data.AuthManager
-import com.example.videojuegosapi.ui.screens.ListaJuegosScreen
-import com.example.videojuegosapi.ui.theme.screens.ForgotPasswordScreen
-import com.example.videojuegosapi.ui.theme.screens.LoginScreen
-import com.example.videojuegosapi.ui.theme.screens.SignUpScreen
+import com.example.videojuegosapi.ui.screens.ListaJuegos.ListaJuegosScreen
+import com.example.videojuegosapi.ui.screens.ForgotPasswordScreen
+import com.example.videojuegosapi.ui.screens.LoginScreen
+import com.example.videojuegosapi.ui.screens.SignUpScreen
 import com.example.videojuegosapp.ui.screens.JuegoDetallesScreen
 
 @Composable

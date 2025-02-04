@@ -52,6 +52,8 @@ class AuthManager(private val context: Context) {
 
     fun signOut() {
         auth.signOut()
+        googleSignInClient.signOut()
+        googleSignInClient.revokeAccess()
     }
 
     fun handleSignInResult(task: Task<GoogleSignInAccount>):

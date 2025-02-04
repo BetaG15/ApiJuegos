@@ -1,10 +1,9 @@
-package com.example.videojuegosapi.viewmodel
+package com.example.videojuegosapi.ui.screens.DetalleJuegos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.videojuegosapi.data.network.ApiClient
 import com.example.videojuegosapi.data.objetos.DetalleJuegos
-import com.example.videojuegosapi.data.objetos.Juego
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

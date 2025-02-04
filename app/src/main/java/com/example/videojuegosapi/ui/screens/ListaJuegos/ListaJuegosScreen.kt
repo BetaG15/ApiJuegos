@@ -1,4 +1,4 @@
-package com.example.videojuegosapi.ui.screens
+package com.example.videojuegosapi.ui.screens.ListaJuegos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +29,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.videojuegosapi.R
 import com.example.videojuegosapi.data.AuthManager
-import com.example.videojuegosapi.viewmodel.JuegosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

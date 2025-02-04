@@ -1,4 +1,4 @@
-package com.example.videojuegosapi.ui.theme.screens
+package com.example.videojuegosapi.ui.screens
 
 import android.content.Context
 import android.widget.Toast

@@ -37,10 +37,10 @@ fun Navigation(navController: NavHostController, auth: AuthManager) {
         composable("listaJuegos") {
             ListaJuegosScreen(
                 navController = navController,
-                auth = auth,  // Pasar instancia de AuthManager
+                auth = auth,
                 navigateToLogin = {
                     navController.navigate("login") {
-                        popUpTo("listaJuegos") { inclusive = true } // Elimina la pantalla anterior
+                        popUpTo("listaJuegos") { inclusive = true }
                     }
                 }
             )

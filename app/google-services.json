@@ -14,11 +14,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "283711467163-2iasqe1gc8dl2sfc3j6mk7rmddjur0d1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.videojuegosapi",
+            "certificate_hash": "ac5c536b704752065de05f36d6fe326523405943"
+          }
+        },
+        {
           "client_id": "283711467163-7f8ri0o7o5kinqdkjb2bbho9vqmfdh08.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.videojuegosapi",
             "certificate_hash": "e3afad1e6125cbbf8a23ebb81439a9502455558c"
+          }
+        },
+        {
+          "client_id": "283711467163-pk3ig3crbo4e418upl49k9i8ndmvvtmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.videojuegosapi",
+            "certificate_hash": "1c1b7a7741871e91b44950873f8eedae81656643"
+          }
+        },
+        {
+          "client_id": "283711467163-r15hmiik88qh0jdcnl3ud7hbp9ql5rld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.videojuegosapi",
+            "certificate_hash": "e899d3b577709be3128a3ad7fde2b2bd47c6576c"
           }
         },
         {

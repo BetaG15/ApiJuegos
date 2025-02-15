@@ -1,31 +1,39 @@
 package com.example.videojuegosapi.ui.screens.ListaJuegos
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.videojuegosapi.data.network.ApiClient
-import com.example.videojuegosapi.data.objetos.Juego
+import com.example.videojuegosapi.data.FirestoreManager
+import com.example.videojuegosapi.data.model.Juego
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-//Clase de ViewModel para el manejo de datos de la aplicación
-class JuegosViewModel : ViewModel() {
+class JuegosViewModel(private val firestoreManager: FirestoreManager) : ViewModel() {
+
     private val _juegos = MutableStateFlow<List<Juego>>(emptyList())
     val juegos: StateFlow<List<Juego>> = _juegos
 
-    // Cargar la lista de juegos
-    fun cargarJuegos() {
+    // Función para cargar juegos filtrados por consola
+    fun cargarJuegos(nombreConsola: String) {
         viewModelScope.launch {
             try {
-                val juegosCargados = ApiClient.getGames()
-                if (juegosCargados.isNotEmpty()) {
-                    _juegos.value = juegosCargados
-                } else {
-                    println("Error: Lista de juegos vacía")
+                firestoreManager.getJuegos(nombreConsola).collect { juegosList ->
+                    _juegos.value = juegosList
                 }
             } catch (e: Exception) {
                 println("Error al cargar los juegos: ${e.message}")
-                e.printStackTrace()
+            }
+        }
+    }
+
+    //agregar un nuevo juego
+    fun agregarJuego(juego: Juego) {
+        viewModelScope.launch {
+            try {
+                firestoreManager.addJuego(juego)
+            } catch (e: Exception) {
+                Log.e("JuegosViewModel", "Error al agregar juego", e)
             }
         }
     }

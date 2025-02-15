@@ -1,6 +1,7 @@
 [versions]
-agp = "8.7.0-alpha08"
+agp = "8.8.0"
 coilCompose = "2.4.0"
+firebaseFirestoreKtx = "25.1.2"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -10,13 +11,15 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
 navigationCompose = "2.8.5"
-firebaseBom = "33.8.0"
-firebaseAuthKtx = "23.1.0"
+firebaseBom = "32.2.2"
+firebase-firestore = "24.7.0"
+google-services = "4.3.15"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-firestore-ktx-v2512 = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -34,14 +37,16 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 firebase-bom = { group ="com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = {group = "com.google.firebase", name = "firebase-analytics"}
 firebase-auth = {group = "com.google.firebase", name = "firebase-auth-ktx"}
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebase-firestore" }
 coil = { group = "io.coil-kt", name = "coil-compose", version = "2.4.0" }
 play-services = {group = "com.google.android.gms", name = "play-services-auth", version = "21.3.0"}
 play-services-auth = { module = "com.google.android.gms:play-services-auth" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 

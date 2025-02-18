@@ -87,4 +87,32 @@ class FirestoreManager {
         juego.id = juegoRef.id
         juegoRef.set(juego).await()
     }
+
+    // Actualizar un juego
+    suspend fun actualizarJuegoPorNombre(nombreJuego: String, nuevosDatos: Map<String, Any>) {
+        val juegosRef = firestore.collection(COLLECTION_JUEGOS)
+
+        val querySnapshot = juegosRef.whereEqualTo("nombre", nombreJuego).get().await()
+
+        if (!querySnapshot.isEmpty) {
+            val document = querySnapshot.documents.first()
+            document.reference.update(nuevosDatos).await()
+        } else {
+            Log.e("FirestoreManager", "Juego con nombre $nombreJuego no encontrado.")
+        }
+    }
+
+
+    // Eliminar un juego por su nombre
+    suspend fun deleteJuegoPorNombre(nombreJuego: String) {
+        val querySnapshot = firestore.collection(COLLECTION_JUEGOS)
+            .whereEqualTo("nombre", nombreJuego)
+            .get()
+            .await()
+
+        for (document in querySnapshot.documents) {
+            firestore.collection(COLLECTION_JUEGOS).document(document.id).delete().await()
+        }
+    }
+
 }

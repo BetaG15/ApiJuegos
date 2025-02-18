@@ -33,5 +33,36 @@ class DetalleJuegosViewModel(private val firestoreManager: FirestoreManager) : V
             }
         }
     }
+
+    // Actualizar Juego
+    fun actualizarJuego(nombreJuego: String, descripcion: String, imagen: String, consolas: List<String>) {
+        viewModelScope.launch {
+            try {
+                val nuevosDatos = mapOf(
+                    "descripcion" to descripcion,
+                    "imagen" to imagen,
+                    "consolas" to consolas
+                )
+                firestoreManager.actualizarJuegoPorNombre(nombreJuego, nuevosDatos)
+                Log.d("DetalleViewModel", "Juego actualizado correctamente.")
+            } catch (e: Exception) {
+                Log.e("DetalleViewModel", "Error al actualizar el juego: ${e.message}")
+            }
+        }
+    }
+
+
+    // Eliminar Juego
+    fun eliminarJuego(nombreJuego: String) {
+        viewModelScope.launch {
+            try {
+                firestoreManager.deleteJuegoPorNombre(nombreJuego)
+                Log.d("DetalleViewModel", "Juego eliminado: $nombreJuego")
+            } catch (e: Exception) {
+                Log.e("DetalleViewModel", "Error al eliminar el juego: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+    }
 }
 

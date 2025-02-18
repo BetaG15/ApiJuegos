@@ -37,4 +37,5 @@ class JuegosViewModel(private val firestoreManager: FirestoreManager) : ViewMode
             }
         }
     }
+
 }

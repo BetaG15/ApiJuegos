@@ -6,10 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,6 +64,11 @@ fun ListaJuegosScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = nombreConsola) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Atrás")
+                    }
+                },
                 actions = {
                     IconButton(onClick = { showDialog = true }) {
                         Icon(Icons.AutoMirrored.Outlined.ExitToApp, contentDescription = "Cerrar sesión")
@@ -90,7 +101,6 @@ fun ListaJuegosScreen(
                     }
                 )
             }
-
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.padding(8.dp)
@@ -132,9 +142,9 @@ fun ListaJuegosScreen(
                 }
             }
 
-            // Creacion de juego
             if (showFormDialog) {
                 CrearJuegoForm(
+                    firestoreManager = FirestoreManager(),
                     onDismiss = { showFormDialog = false },
                     onSubmit = { nombre, descripcion, imagen, consolas ->
                         val nuevoJuego = Juego(
@@ -144,6 +154,7 @@ fun ListaJuegosScreen(
                             consolas = consolas
                         )
                         viewModel.agregarJuego(nuevoJuego)
+                        viewModel.cargarJuegos(nombreConsola)
                         showFormDialog = false
                     }
                 )
@@ -155,12 +166,23 @@ fun ListaJuegosScreen(
 @Composable
 fun CrearJuegoForm(
     onDismiss: () -> Unit,
-    onSubmit: (String, String, String, List<String>) -> Unit
+    onSubmit: (String, String, String, List<String>) -> Unit,
+    firestoreManager: FirestoreManager
 ) {
     var nombre by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var imagen by remember { mutableStateOf("") }
-    var consolas by remember { mutableStateOf(listOf<String>()) }
+    var consolasSeleccionadas by remember { mutableStateOf(mutableSetOf<String>()) }
+    var expanded by remember { mutableStateOf(false) }
+    var listaConsolas = remember { mutableStateListOf<String>() }
+
+    // Cargar las consolas disponibles
+    LaunchedEffect(Unit) {
+        firestoreManager.getConsolas().collect { consolas ->
+            listaConsolas.clear()
+            listaConsolas.addAll(consolas.map { it.nombre }) // Asegúrate de que `Consola` tiene un campo `nombre`
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -188,18 +210,52 @@ fun CrearJuegoForm(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    value = consolas.joinToString(","),
-                    onValueChange = { consolas = it.split(",") },
-                    label = { Text("Consolas disponibles") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+
+                // Dropdown de consolas
+                Box {
+                    Button(onClick = { expanded = true }) {
+                        Text("Seleccionar Consolas")
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        listaConsolas.forEach { consola ->
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (consolasSeleccionadas.contains(consola)) {
+                                            Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = "Seleccionado",
+                                                tint = Color.Green
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+                                        Text(consola)
+                                    }
+                                },
+                                onClick = {
+                                    if (consolasSeleccionadas.contains(consola)) {
+                                        consolasSeleccionadas.remove(consola)
+                                    } else {
+                                        consolasSeleccionadas.add(consola)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // Mostrar consolas seleccionadas
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Consolas Seleccionadas: ${consolasSeleccionadas.joinToString(", ")}")
             }
         },
         confirmButton = {
             Button(onClick = {
                 if (nombre.isNotBlank() && descripcion.isNotBlank() && imagen.isNotBlank()) {
-                    onSubmit(nombre, descripcion, imagen, consolas)
+                    onSubmit(nombre, descripcion, imagen, consolasSeleccionadas.toList())
                 }
             }) {
                 Text("Crear Juego")
@@ -212,6 +268,8 @@ fun CrearJuegoForm(
         }
     )
 }
+
+
 
 
 @Composable

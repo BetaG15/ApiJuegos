@@ -134,6 +134,7 @@ fun ListaConsolasScreen(
                     onDismiss = { showAddConsolaDialog = false },
                     onConfirm = { nombreConsola, imagenConsola ->
                         viewModel.addConsola(Consola(nombre = nombreConsola, imagen = imagenConsola))
+                        viewModel.cargarConsolas()
                         showAddConsolaDialog = false
                     }
                 )

@@ -9,9 +9,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -20,8 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -163,15 +168,12 @@ fun JuegoDetallesScreen(
 
     if (showEditForm && detalleJuego != null) {
         EditarJuegoForm(
-            juego = detalleJuego!!,
+            juego = detalleJuego!!, // Pasamos el juego actual
+            firestoreManager = firestoreManager,
             onDismiss = { showEditForm = false },
             onSubmit = { nombre, descripcion, imagen, consolas ->
-                viewModel.actualizarJuego(
-                    NombreJuego!!,
-                    descripcion,
-                    imagen,
-                    consolas
-                )
+                viewModel.actualizarJuego(nombre, descripcion, imagen, consolas)
+                viewModel.cargarDetalleJuego(nombre)
                 showEditForm = false
             }
         )
@@ -181,32 +183,101 @@ fun JuegoDetallesScreen(
 @Composable
 fun EditarJuegoForm(
     juego: Juego,
+    firestoreManager: FirestoreManager,
     onDismiss: () -> Unit,
     onSubmit: (String, String, String, List<String>) -> Unit
 ) {
+    var nombre by remember { mutableStateOf(juego.nombre) }
     var descripcion by remember { mutableStateOf(juego.descripcion) }
     var imagen by remember { mutableStateOf(juego.imagen) }
-    var consolas by remember { mutableStateOf(juego.consolas.joinToString(",")) }
+    var consolasSeleccionadas by remember { mutableStateOf(juego.consolas.toMutableSet()) }
+    var expanded by remember { mutableStateOf(false) }
+    var listaConsolas = remember { mutableStateListOf<String>() }
+
+    // Cargar lista de consolas disponibles desde Firestore
+    LaunchedEffect(Unit) {
+        firestoreManager.getConsolas().collect { consolas ->
+            listaConsolas.clear()
+            listaConsolas.addAll(consolas.map { it.nombre })
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Editar Juego") },
+        title = { Text("Actualizar Juego") },
         text = {
             Column {
-                TextField(value = juego.nombre, onValueChange = {}, label = { Text("Nombre del Juego") }, enabled = false)
+                TextField(
+                    value = nombre,
+                    onValueChange = { nombre = it },
+                    label = { Text("Nombre del Juego") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = false
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(value = descripcion, onValueChange = { descripcion = it }, label = { Text("Descripción") })
+                TextField(
+                    value = descripcion,
+                    onValueChange = { descripcion = it },
+                    label = { Text("Descripción") },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(value = imagen, onValueChange = { imagen = it }, label = { Text("URL de la Imagen") })
+                TextField(
+                    value = imagen,
+                    onValueChange = { imagen = it },
+                    label = { Text("URL de la Imagen") },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(value = consolas, onValueChange = { consolas = it }, label = { Text("Consolas disponibles (separadas por coma)") })
+
+                // Dropdown de consolas
+                Box {
+                    Button(onClick = { expanded = true }) {
+                        Text("Seleccionar Consolas")
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        listaConsolas.forEach { consola ->
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (consolasSeleccionadas.contains(consola)) {
+                                            Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = "Seleccionado",
+                                                tint = Color.Green
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+                                        Text(consola)
+                                    }
+                                },
+                                onClick = {
+                                    if (consolasSeleccionadas.contains(consola)) {
+                                        consolasSeleccionadas.remove(consola)
+                                    } else {
+                                        consolasSeleccionadas.add(consola)
+
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Consolas Seleccionadas: ${consolasSeleccionadas.joinToString(", ")}")
             }
         },
         confirmButton = {
             Button(onClick = {
-                onSubmit(juego.nombre, descripcion, imagen, consolas.split(","))
+                if (nombre.isNotBlank() && descripcion.isNotBlank() && imagen.isNotBlank()) {
+                    onSubmit(nombre, descripcion, imagen, consolasSeleccionadas.toList())
+                }
             }) {
-                Text("Guardar Cambios")
+                Text("Actualizar Juego")
             }
         },
         dismissButton = {
@@ -216,3 +287,4 @@ fun EditarJuegoForm(
         }
     )
 }
+

@@ -22,56 +22,55 @@ fun Navigation(
     auth: AuthManager,
     firestoreManager: FirestoreManager
 ) {
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") {
+    NavHost(navController = navController, startDestination = Login.toString()) {
+        composable(Login.toString()) {
             LoginScreen(
                 auth = auth,
-                navigateToSignUp = { navController.navigate("signup") },
-                navigateToHome = { navController.navigate("listaConsolas") },
-                navigateToForgotPassword = { navController.navigate("forgot_password") }
+                navigateToSignUp = { navController.navigate(SignUp.toString()) },
+                navigateToHome = { navController.navigate(ListaConsolas.toString()) },
+                navigateToForgotPassword = { navController.navigate(ForgotPassword.toString()) }
             )
         }
-        composable("signup") {
+        composable(SignUp.toString()) {
             SignUpScreen(
                 auth = auth,
-                navigateToLogin = { navController.navigate("login") },
-                navigateToHome = { navController.navigate("listaConsolas") }
+                navigateToLogin = { navController.navigate(Login.toString()) },
+                navigateToHome = { navController.navigate(ListaConsolas.toString()) }
             )
         }
-        composable("forgot_password") {
+        composable(ForgotPassword.toString()) {
             ForgotPasswordScreen(
                 auth = auth,
-                navigateToLogin = { navController.navigate("login") }
+                navigateToLogin = { navController.navigate(Login.toString()) }
             )
         }
-        composable("listaConsolas") {
+        composable(ListaConsolas.toString()) {
             ListaConsolasScreen(
                 navController = navController,
                 auth = auth,
                 firestoreManager = firestoreManager,
                 navigateToLogin = {
-                    navController.navigate("login") {
-                        popUpTo("listaConsolas") { inclusive = true }
+                    navController.navigate(Login.toString()) {
+                        popUpTo(ListaConsolas.toString()) { inclusive = true }
                     }
                 }
             )
         }
 
-        //Navigations que pasan el ViewModelFactory
         composable("listaJuegos/{nombreConsola}") { backStackEntry ->
             val nombreConsola = backStackEntry.arguments?.getString("nombreConsola") ?: ""
-            Log.d("Navigation", "Navegando a listaJuegos con nombre: ${nombreConsola}")
+            Log.d("Navigation", "Navegando a listaJuegos con nombre: $nombreConsola")
 
             val viewModel: JuegosViewModel = ViewModelProvider(
                 backStackEntry,
-                JuegosViewModelFactory(firestoreManager) // Pasar FirestoreManager si es necesario
+                JuegosViewModelFactory(firestoreManager)
             ).get(JuegosViewModel::class.java)
 
             ListaJuegosScreen(
                 navController = navController,
                 auth = auth,
                 navigateToLogin = {
-                    navController.navigate("login") {
+                    navController.navigate(Login.toString()) {
                         popUpTo("listaJuegos") { inclusive = true }
                     }
                 },
@@ -81,18 +80,18 @@ fun Navigation(
         }
 
         composable("game_details/{NombreJuego}") { backStackEntry ->
-            val NombreJuego = backStackEntry.arguments?.getString("NombreJuego") ?: ""
+            val nombreJuego = backStackEntry.arguments?.getString("NombreJuego") ?: ""
 
             val viewModel: DetalleJuegosViewModel = ViewModelProvider(
                 backStackEntry,
-                DetalleJuegosViewModelFactory(firestoreManager) // Pasar FirestoreManager
+                DetalleJuegosViewModelFactory(firestoreManager)
             ).get(DetalleJuegosViewModel::class.java)
 
-            Log.d("NavDetalles", "ID del juego: $NombreJuego")
+            Log.d("NavDetalles", "ID del juego: $nombreJuego")
             JuegoDetallesScreen(
                 navController = navController,
-                NombreJuego = NombreJuego,
-                firestoreManager = firestoreManager, // Puede ser necesario pasarlo aquí también
+                NombreJuego = nombreJuego,
+                firestoreManager = firestoreManager,
                 viewModel = viewModel
             )
         }
